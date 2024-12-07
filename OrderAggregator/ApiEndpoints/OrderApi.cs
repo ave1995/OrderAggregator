@@ -9,6 +9,7 @@ public static class OrderApi
     public static void ConfigureOrderApi(this WebApplication app)
     {
         app.MapPost("/orders", AddOrders);
+        app.MapPost("/order", AddOrder);
     }
 
     private static async Task<IResult> AddOrders([FromBody]IEnumerable<OrderItem> orders, IOrderManager orderManager)
@@ -16,6 +17,19 @@ public static class OrderApi
         try
         {
             await orderManager.AddOrdersAsync(orders);
+            return Results.Ok();
+        }
+        catch (Exception ex)
+        {
+            return Results.Problem(ex.Message);
+        }
+    }
+
+    private static async Task<IResult> AddOrder([FromBody] OrderItem order, IOrderManager orderManager)
+    {
+        try
+        {
+            await orderManager.AddOrderAsync(order);
             return Results.Ok();
         }
         catch (Exception ex)

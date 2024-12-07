@@ -15,7 +15,7 @@ public class OrderAggregationManager : IOrderManager
     {
         _aggregatedOrders = new ConcurrentDictionary<int, int>();
     }
-    
+
     public IReadOnlyDictionary<int, int> GetAggregatedOrders() =>
         new ReadOnlyDictionary<int, int>(_aggregatedOrders);
 
@@ -31,4 +31,13 @@ public class OrderAggregationManager : IOrderManager
 
         await Task.WhenAll(tasks);
     }
+    
+    public Task AddOrderAsync(OrderItem order)
+    {
+        _aggregatedOrders.AddOrUpdate(order.ProductId, order.Quantity,
+            (_, existingQuantity) => existingQuantity + order.Quantity);
+        
+        return Task.CompletedTask;
+    }
+
 }
