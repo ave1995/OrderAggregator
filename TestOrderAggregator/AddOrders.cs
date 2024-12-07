@@ -11,17 +11,20 @@ public class AddOrders
     {
         var orderManager = new OrderManager(new OrderStore());
         
-        const int totalOrderCount = 100;
+        const int addOrdersCalls = 100_000;
+        const int orderCount = 100;
         
-        for (var i = 0; i < totalOrderCount; i ++)
+        var orders = GenerateOrders(orderCount).ToList();
+        
+        for (var i = 0; i < addOrdersCalls; i ++)
         {
-            var orders = GenerateOrders(totalOrderCount);
             await orderManager.AddOrdersAsync(orders);
         }
 
         var totalOrders = await orderManager.GetOrdersAsync();
         
-        Assert.AreEqual(totalOrderCount, totalOrders.Count);
+        Assert.AreEqual(100, totalOrders.Count);
+        Assert.AreEqual(1_000_000, totalOrders[0].Quantity);
     }
 
     [TestMethod]
@@ -29,24 +32,31 @@ public class AddOrders
     {
         var orderManager = new OrderManager(new OrderStore());
 
+        const int addOrdersCalls = 100_000;
+        const int orderCount = 100;
+        
+        var orders = GenerateOrders(orderCount).ToList();
+        
         var tasks = new List<Task>();
-
-        for (var i = 0; i < 1_000_000; i++)
+        
+        for (var i = 0; i < addOrdersCalls; i++)
         {
-            tasks.Add(orderManager.AddOrdersAsync(GenerateOrders(i)));
+            tasks.Add(orderManager.AddOrdersAsync(orders));
         }
 
         await Task.WhenAll(tasks);
 
         var totalOrders = await orderManager.GetOrdersAsync();
+        
+        Assert.AreEqual(100, totalOrders.Count);
+        Assert.AreEqual(1_000_000, totalOrders[0].Quantity);
     }
     
     private static IEnumerable<OrderItem> GenerateOrders(int count)
     {
-        var rnd = new Random();
-        for (var i = 1; i < 100 + 1; i++)
+        for (var i = 1; i < count + 1; i++)
         {
-            yield return new OrderItem(i, rnd.Next(1,1000));
+            yield return new OrderItem(i, 10);
         }
     }
 }
