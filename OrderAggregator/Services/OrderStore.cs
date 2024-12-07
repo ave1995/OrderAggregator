@@ -16,10 +16,12 @@ public class OrderStore : IOrderStore
     }
 
     /// <summary>
-    /// Objednávka se buď vytváří nebo se jen aktualizuje quantity.
+    /// Inserts an order item into the aggregated orders collection.
+    /// If an item with the same ProductId already exists, it updates the quantity by adding the new quantity to the existing one.
+    /// Otherwise, it adds the new order item with its quantity.
     /// </summary>
-    /// <param name="order"></param>
-    /// <returns></returns>
+    /// <param name="order">The order item to insert, containing the product ID and quantity.</param>
+    /// <returns>A completed task, indicating that the operation is synchronous and requires no asynchronous processing.</returns>
     public Task InsertOrderAsync(OrderItem order)
     {
         _aggregatedOrders.AddOrUpdate(

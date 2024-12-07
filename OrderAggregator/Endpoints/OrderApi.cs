@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using OrderAggregator.Models;
 using OrderAggregator.Services.Interfaces;
 
-namespace OrderAggregator.ApiEndpoints;
+namespace OrderAggregator.Endpoints;
 
 public static class OrderApi
 {
@@ -25,7 +25,6 @@ public static class OrderApi
         }
     }
 
-    //myslím si, že je zbytečná, ale radši jí přidám
     private static async Task<IResult> AddOrder([FromBody] OrderItem order, IOrderManager orderManager)
     {
         try

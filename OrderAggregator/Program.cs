@@ -1,8 +1,8 @@
-using OrderAggregator.ApiEndpoints;
 using OrderAggregator.Services;
 using OrderAggregator.Services.Interfaces;
 using Hangfire;
 using Hangfire.MemoryStorage;
+using OrderAggregator.Endpoints;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,7 +31,7 @@ app.UseHttpsRedirection();
 
 app.ConfigureOrderApi();
 
-app.UseHangfireDashboard("/hangfire");
+app.UseHangfireDashboard(); //"/hangfire"
 
 RecurringJob.AddOrUpdate<IOrderSender>("send-orders",
     sender => sender.SendOrdersAsync(),
