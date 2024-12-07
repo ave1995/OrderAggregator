@@ -1,0 +1,27 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderAggregator", "OrderAggregator\OrderAggregator.csproj", "{EB3AD8FB-193A-40BA-8B5B-ABF937205DEB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E0019ED2-8187-469E-A171-8355AF8D8CE8}"
+	ProjectSection(SolutionItems) = preProject
+		compose.yaml = compose.yaml
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestOrderAggregator", "TestOrderAggregator\TestOrderAggregator.csproj", "{56B0E67D-C667-4592-9070-5373E653EF9B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EB3AD8FB-193A-40BA-8B5B-ABF937205DEB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB3AD8FB-193A-40BA-8B5B-ABF937205DEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB3AD8FB-193A-40BA-8B5B-ABF937205DEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB3AD8FB-193A-40BA-8B5B-ABF937205DEB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56B0E67D-C667-4592-9070-5373E653EF9B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56B0E67D-C667-4592-9070-5373E653EF9B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56B0E67D-C667-4592-9070-5373E653EF9B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56B0E67D-C667-4592-9070-5373E653EF9B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
