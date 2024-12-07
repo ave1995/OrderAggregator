@@ -19,7 +19,7 @@ public class AddOrders
             await orderManager.AddOrdersAsync(orders);
         }
 
-        var totalOrders = await orderManager.GetAggregatedOrdersAsync();
+        var totalOrders = await orderManager.GetOrdersAsync();
         
         Assert.AreEqual(totalOrderCount, totalOrders.Count);
     }
@@ -38,7 +38,7 @@ public class AddOrders
 
         await Task.WhenAll(tasks);
 
-        var totalOrders = orderManager.GetAggregatedOrdersAsync();
+        var totalOrders = await orderManager.GetOrdersAsync();
     }
     
     private static IEnumerable<OrderItem> GenerateOrders(int count)

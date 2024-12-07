@@ -1,5 +1,4 @@
 using System.Text.Json;
-using OrderAggregator.Models;
 using OrderAggregator.Services.Interfaces;
 
 namespace OrderAggregator.Services;
@@ -15,13 +14,9 @@ public class OrderSender(ILogger<OrderSender> logger, IServiceProvider servicePr
     {
         using var scope = serviceProvider.CreateScope();
         var orderManager = scope.ServiceProvider.GetRequiredService<IOrderManager>();
-        var orders = await orderManager.GetAggregatedOrdersAsync();
+        var orders = await orderManager.GetOrdersAsync();
 
-        var jsonObject = orders.Select(item
-                => new OrderItem(item.Key, item.Value))
-            .ToList();
-
-        var json = JsonSerializer.Serialize(jsonObject, JsonWriteOptions);
+        var json = JsonSerializer.Serialize(orders, JsonWriteOptions);
 
         logger.LogInformation("{json}", json);
     }
