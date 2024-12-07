@@ -2,5 +2,5 @@ namespace OrderAggregator.Services.Interfaces;
 
 public interface IOrderSender
 {
-    Task SendOrdersAsync();
+    Task<string> SendOrdersAsync();
 }

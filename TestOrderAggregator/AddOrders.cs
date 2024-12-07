@@ -14,7 +14,7 @@ public class AddOrders
         const int addOrdersCalls = 100_000;
         const int orderCount = 100;
         
-        var orders = GenerateOrders(orderCount).ToList();
+        var orders = Helpers.GenerateOrders(orderCount).ToList();
         
         for (var i = 0; i < addOrdersCalls; i ++)
         {
@@ -35,7 +35,7 @@ public class AddOrders
         const int addOrdersCalls = 100_000;
         const int orderCount = 100;
         
-        var orders = GenerateOrders(orderCount).ToList();
+        var orders = Helpers.GenerateOrders(orderCount).ToList();
         
         var tasks = new List<Task>();
         
@@ -50,13 +50,5 @@ public class AddOrders
         
         Assert.AreEqual(100, totalOrders.Count);
         Assert.AreEqual(1_000_000, totalOrders[0].Quantity);
-    }
-    
-    private static IEnumerable<OrderItem> GenerateOrders(int count)
-    {
-        for (var i = 1; i < count + 1; i++)
-        {
-            yield return new OrderItem(i, 10);
-        }
     }
 }

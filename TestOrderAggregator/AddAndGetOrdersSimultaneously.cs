@@ -10,7 +10,6 @@ public class AddAndGetOrdersSimultaneously
     public async Task Test_AddAndGetOrdersSimultaneously_ShouldAggregateOrdersCorrectly()
     {
         var orderManager = new OrderManager(new OrderStore());
-
         var orders = new List<OrderItem>
         {
             new(1, 5),
@@ -18,7 +17,7 @@ public class AddAndGetOrdersSimultaneously
             new(1, 3),
             new(3, 7)
         };
-
+        
         var addOrdersTask = Task.WhenAll(
             Task.Run(() => orderManager.AddOrdersAsync(orders)),
             Task.Run(() => orderManager.AddOrdersAsync(orders)),
@@ -30,6 +29,7 @@ public class AddAndGetOrdersSimultaneously
             Task.Run(() => orderManager.GetOrdersAsync())
         );
 
+        //I run AddOrders and GetOrders Simultaneously
         await Task.WhenAll(addOrdersTask, getOrdersTask);
 
         var finalAggregatedOrders = await orderManager.GetOrdersAsync();
@@ -42,7 +42,6 @@ public class AddAndGetOrdersSimultaneously
     public async Task Test_AddAndGetOrdersSimultaneously_ShouldAggregateOrdersCorrectly_Delays()
     {
         var orderManager = new OrderManager(new OrderStore());
-
         var orders = new List<OrderItem>
         {
             new(1, 5),
@@ -82,6 +81,7 @@ public class AddAndGetOrdersSimultaneously
             })
         );
 
+        //I run AddOrders and GetOrders Simultaneously, but I added delay
         await Task.WhenAll(addOrdersTask, getOrdersTask);
 
         var finalAggregatedOrders = await orderManager.GetOrdersAsync();

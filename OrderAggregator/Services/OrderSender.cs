@@ -10,7 +10,7 @@ public class OrderSender(ILogger<OrderSender> logger, IServiceProvider servicePr
         WriteIndented = true
     };
 
-    public async Task SendOrdersAsync()
+    public async Task<string> SendOrdersAsync()
     {
         using var scope = serviceProvider.CreateScope();
         var orderManager = scope.ServiceProvider.GetRequiredService<IOrderManager>();
@@ -19,5 +19,7 @@ public class OrderSender(ILogger<OrderSender> logger, IServiceProvider servicePr
         var json = JsonSerializer.Serialize(orders, JsonWriteOptions);
 
         logger.LogInformation("{json}", json);
+        
+        return json;
     }
 }
