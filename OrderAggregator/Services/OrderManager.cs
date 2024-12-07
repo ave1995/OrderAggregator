@@ -3,16 +3,13 @@ using OrderAggregator.Services.Interfaces;
 
 namespace OrderAggregator.Services;
 
-public class OrderManager : IOrderManager
+public class OrderManager(IOrderStore orderStore) : IOrderManager
 {
-    public Task AddOrdersAsync(IEnumerable<OrderItem> orders)
+    public async Task<IReadOnlyDictionary<int, int>> GetAggregatedOrdersAsync() => await orderStore.GetAggregatedOrdersAsync();
+        
+    public async Task AddOrdersAsync(IEnumerable<OrderItem> orders)
     {
-        Console.WriteLine(string.Join(", ", orders));
-        return Task.CompletedTask;
-    }
-
-    public IReadOnlyDictionary<int, int> GetAggregatedOrders()
-    {
-        throw new NotImplementedException();
+        foreach (var order in orders)
+            await orderStore.InsertOrderAsync(order);
     }
 }

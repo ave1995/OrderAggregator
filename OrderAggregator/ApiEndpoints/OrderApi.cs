@@ -25,11 +25,12 @@ public static class OrderApi
         }
     }
 
+    //myslím si, že je zbytečná, ale radši jí přidám
     private static async Task<IResult> AddOrder([FromBody] OrderItem order, IOrderManager orderManager)
     {
         try
         {
-            await orderManager.AddOrderAsync(order);
+            await orderManager.AddOrdersAsync([order]);
             return Results.Ok();
         }
         catch (Exception ex)

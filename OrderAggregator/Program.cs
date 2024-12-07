@@ -1,18 +1,26 @@
 using OrderAggregator.ApiEndpoints;
 using OrderAggregator.Services;
 using OrderAggregator.Services.Interfaces;
+using Hangfire;
+using Hangfire.MemoryStorage;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddSingleton<IOrderManager, OrderAggregationManager>();
+
+builder.Services.AddScoped<IOrderManager, OrderManager>();
+builder.Services.AddSingleton<IOrderStore, OrderStore>();
+
+builder.Services.AddHangfire(configuration => configuration.UseMemoryStorage());
+builder.Services.AddHangfireServer();
+
+builder.Services.AddSingleton<IOrderSender, OrderSender>();
+
+var cronExpression = builder.Configuration.GetValue<string>("HangfireSettings:CronExpression", "*/5 * * * * *");
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -22,5 +30,11 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.ConfigureOrderApi();
+
+app.UseHangfireDashboard("/hangfire");
+
+RecurringJob.AddOrUpdate<IOrderSender>("send-orders",
+    sender => sender.SendOrdersAsync(),
+    cronExpression);
 
 app.Run();

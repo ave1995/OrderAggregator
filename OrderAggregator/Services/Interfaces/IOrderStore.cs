@@ -2,9 +2,9 @@ using OrderAggregator.Models;
 
 namespace OrderAggregator.Services.Interfaces;
 
-public interface IOrderManager
+public interface IOrderStore
 {
-    Task AddOrdersAsync(IEnumerable<OrderItem> orders);
+    Task InsertOrderAsync(OrderItem order);
     
     Task<IReadOnlyDictionary<int, int>> GetAggregatedOrdersAsync();
 }

@@ -7,9 +7,9 @@ namespace TestOrderAggregator;
 public class AddAndGetOrdersSimultaneously
 {
     [TestMethod]
-    public async Task AddAndGetOrdersSimultaneously_ShouldAggregateOrdersCorrectly()
+    public async Task Test_AddAndGetOrdersSimultaneously_ShouldAggregateOrdersCorrectly()
     {
-        var orderManager = new OrderAggregationManager();
+        var orderManager = new OrderManager(new OrderStore());
         
         var orders = new List<OrderItem>
         {
@@ -26,22 +26,22 @@ public class AddAndGetOrdersSimultaneously
         );
 
         var getOrdersTask = Task.WhenAll(
-            Task.Run(() => { orderManager.GetAggregatedOrders(); }),
-            Task.Run(() => { orderManager.GetAggregatedOrders(); })
+            Task.Run(() => { orderManager.GetAggregatedOrdersAsync(); }),
+            Task.Run(() => { orderManager.GetAggregatedOrdersAsync(); })
         );
 
         await Task.WhenAll(addOrdersTask, getOrdersTask);
 
-        var finalAggregatedOrders = orderManager.GetAggregatedOrders();
+        var finalAggregatedOrders = await orderManager.GetAggregatedOrdersAsync();
         Assert.AreEqual(24, finalAggregatedOrders[1]); 
         Assert.AreEqual(30, finalAggregatedOrders[2]); 
         Assert.AreEqual(21, finalAggregatedOrders[3]);
     }
     
     [TestMethod]
-    public async Task AddAndGetOrdersSimultaneously_ShouldAggregateOrdersCorrectly_Delays()
+    public async Task Test_AddAndGetOrdersSimultaneously_ShouldAggregateOrdersCorrectly_Delays()
     {
-        var orderManager = new OrderAggregationManager();
+        var orderManager = new OrderManager(new OrderStore());
     
         var orders = new List<OrderItem>
         {
@@ -73,18 +73,18 @@ public class AddAndGetOrdersSimultaneously
             Task.Run(async () => 
             {
                 await Task.Delay(50);
-                orderManager.GetAggregatedOrders();
+                await orderManager.GetAggregatedOrdersAsync();
             }),
             Task.Run(async () => 
             {
                 await Task.Delay(80);
-                orderManager.GetAggregatedOrders();
+                await orderManager.GetAggregatedOrdersAsync();
             })
         );
 
         await Task.WhenAll(addOrdersTask, getOrdersTask);
 
-        var finalAggregatedOrders = orderManager.GetAggregatedOrders();
+        var finalAggregatedOrders = await orderManager.GetAggregatedOrdersAsync();
         Assert.AreEqual(24, finalAggregatedOrders[1]); 
         Assert.AreEqual(30, finalAggregatedOrders[2]); 
         Assert.AreEqual(21, finalAggregatedOrders[3]);

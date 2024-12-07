@@ -1,7 +1,9 @@
+using System.Text.Json.Serialization;
+
 namespace OrderAggregator.Models;
 
-public readonly struct OrderItem(int productId, int quantity)
-{
-    public int ProductId { get; } = productId;
-    public int Quantity { get; } = quantity;
-}
+public record OrderItem(
+    [property: JsonPropertyName("productId")]
+    int ProductId,
+    [property: JsonPropertyName("quantity")]
+    int Quantity);
