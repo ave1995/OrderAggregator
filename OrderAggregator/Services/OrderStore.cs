@@ -1,5 +1,5 @@
 using System.Collections.Concurrent;
-using System.Collections.ObjectModel;
+using System.Collections.Immutable;
 using OrderAggregator.Models;
 using OrderAggregator.Services.Interfaces;
 
@@ -30,6 +30,11 @@ public class OrderStore : IOrderStore
         return Task.CompletedTask;
     }
 
-    public Task<IReadOnlyDictionary<int, int>> GetAggregatedOrdersAsync() 
-        => Task.FromResult<IReadOnlyDictionary<int, int>>(new ReadOnlyDictionary<int, int>(_aggregatedOrders));
+    public Task<IImmutableList<OrderItem>> GetOrdersAsync()
+    {
+        var snapshot = _aggregatedOrders.Select(item
+            => new OrderItem(item.Key, item.Value)).ToImmutableList();
+        
+        return Task.FromResult<IImmutableList<OrderItem>>(snapshot);
+    }
 }
