@@ -19,7 +19,7 @@ builder.Services.AddHangfireServer();
 
 builder.Services.AddSingleton<IOrderSender, OrderSender>();
 
-//I added service which call SendOrders in intervals
+//I added background worker which call SendOrders in intervals
 builder.Services.Configure<PeriodicOrderSenderOptions>(
     builder.Configuration.GetSection("PeriodicOrderSender"));
 builder.Services.AddHostedService<PeriodicOrderSender>();
