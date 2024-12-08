@@ -19,6 +19,8 @@ builder.Services.AddHangfireServer();
 
 builder.Services.AddSingleton<IOrderSender, OrderSender>();
 
+//vím, že v popisu bylo jako do produkce, ale říkal jsem si, že tu nechám obě dvě řešení (Background service a Hangfire nuget)
+
 //I added background worker which call SendOrders in intervals
 builder.Services.Configure<PeriodicOrderSenderOptions>(
     builder.Configuration.GetSection("PeriodicOrderSender"));
