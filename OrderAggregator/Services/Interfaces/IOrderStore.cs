@@ -7,5 +7,8 @@ public interface IOrderStore
 {
     Task InsertOrderAsync(OrderItem order);
     
-    Task<IImmutableList<OrderItem>> GetOrdersAsync();
+    Task<IImmutableList<OrderItem>> GetCurrentOrdersAsync();
+    
+    //Napadlo mě přidat tuhle metodu kvůli tomu, že by někdo chtěl dostávat jen aktuální data
+    Task<IImmutableList<OrderItem>> ClearOrdersAndGetSnapshotAsync();
 }

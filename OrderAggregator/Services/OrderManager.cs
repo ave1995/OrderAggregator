@@ -6,7 +6,7 @@ namespace OrderAggregator.Services;
 
 public class OrderManager(IOrderStore orderStore) : IOrderManager
 {
-    public async Task<IImmutableList<OrderItem>> GetOrdersAsync() => await orderStore.GetOrdersAsync();
+    public async Task<IImmutableList<OrderItem>> GetOrdersAsync() => await orderStore.GetCurrentOrdersAsync();
 
     public async Task AddOrdersAsync(IEnumerable<OrderItem> orders)
     {

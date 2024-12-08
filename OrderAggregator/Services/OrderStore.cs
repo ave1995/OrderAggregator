@@ -7,12 +7,14 @@ namespace OrderAggregator.Services;
 
 public class OrderStore : IOrderStore
 {
-    private readonly ConcurrentDictionary<int, int> _aggregatedOrders;
+    private readonly Dictionary<int, int> _aggregatedOrders;
+
+    private readonly ReaderWriterLockSlim _lock = new();
 
     // ReSharper disable once ConvertConstructorToMemberInitializers
     public OrderStore()
     {
-        _aggregatedOrders = new ConcurrentDictionary<int, int>();
+        _aggregatedOrders = new Dictionary<int, int>();
     }
 
     /// <summary>
@@ -24,19 +26,41 @@ public class OrderStore : IOrderStore
     /// <returns>A completed task, indicating that the operation is synchronous and requires no asynchronous processing.</returns>
     public Task InsertOrderAsync(OrderItem order)
     {
-        _aggregatedOrders.AddOrUpdate(
-            order.ProductId,
-            order.Quantity,
-            (_, existingQuantity) => existingQuantity + order.Quantity);
+        _lock.EnterWriteLock();
+
+        try
+        {
+            if (!_aggregatedOrders.TryAdd(order.ProductId, order.Quantity))
+                _aggregatedOrders[order.ProductId] += order.Quantity;
+        }
+        finally
+        {
+            _lock.ExitWriteLock();
+        }
 
         return Task.CompletedTask;
     }
 
-    public Task<IImmutableList<OrderItem>> GetOrdersAsync()
+    public Task<IImmutableList<OrderItem>> GetCurrentOrdersAsync()
+        => Task.FromResult<IImmutableList<OrderItem>>(GetImmutableOrders(_aggregatedOrders));
+
+    public Task<IImmutableList<OrderItem>> ClearOrdersAndGetSnapshotAsync()
     {
-        var snapshot = _aggregatedOrders.Select(item
-            => new OrderItem(item.Key, item.Value)).ToImmutableList();
-        
-        return Task.FromResult<IImmutableList<OrderItem>>(snapshot);
+        _lock.EnterWriteLock();
+        try
+        {
+            var oldData = new Dictionary<int, int>(_aggregatedOrders);
+            _aggregatedOrders.Clear();
+
+            return Task.FromResult<IImmutableList<OrderItem>>(GetImmutableOrders(oldData));
+        }
+        finally
+        {
+            _lock.ExitWriteLock();
+        }
     }
+
+    private static ImmutableList<OrderItem> GetImmutableOrders(IDictionary<int, int> orders) => orders
+        .Select(item => new OrderItem(item.Key, item.Value))
+        .ToImmutableList();
 }
